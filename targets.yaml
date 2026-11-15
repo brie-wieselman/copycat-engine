@@ -1,0 +1,58 @@
+# ============================================================
+# targets.yaml — the roster the SCOUT agent sweeps
+# ============================================================
+# RULE: handles marked `verified: false` MUST be resolved in Phase 0
+# before the first sweep. Never scrape a guessed handle — a wrong
+# handle silently returns an empty array and the pipeline reports
+# "no outliers" instead of "bad handle".
+#
+# tier_1 = clone the container exactly. These are the pattern source.
+# tier_2 = mine for hooks and topics, don't clone wholesale.
+# tier_3 = adjacent vertical (hormones/functional med) — phase 2 channel.
+
+sweep:
+  lookback_posts: 30          # per creator per platform
+  cadence: weekly             # Sunday 06:00 PT
+  outlier_threshold: 3.0      # >= 3x that creator's own 30-post median
+  absolute_floor_views: 100000
+# ------------------------------------------------------------
+# EXAMPLE ROSTER. Replace every entry with creators you have
+# chosen to study. Placeholders only; no real accounts here.
+# ------------------------------------------------------------
+
+tier_1:
+  - name: Creator A
+    why: "Same niche and audience as you. Highest-fidelity container source."
+    handles:
+      instagram: your_tier1_handle
+      tiktok: your_tier1_handle
+      youtube: "@your_tier1_handle"
+    verified: false
+    resolve: "Confirm each handle in Phase 0 before the first sweep."
+
+  - name: Creator B
+    why: "Adjacent niche, high short-form outlier rate."
+    handles: {instagram: null, tiktok: null, youtube: null}
+    verified: false
+
+# ---- Pinned first teardown ----------------------------------------
+# Optional. One post you already know broke containment. Phase 0
+# resolves who posted it and writes the creator into the roster.
+seed_video:
+  url: null            # e.g. a public reel or short URL
+  platform: instagram
+  attribution: UNCONFIRMED
+  priority: 1
+
+tier_2:
+  # Mine for hooks and topics only. Never clone wholesale.
+  - name: Creator C
+    handles: {instagram: null, tiktok: null, youtube: null}
+    verified: false
+
+# Phase 2: a second vertical. Do not build until the first channel
+# has 30 days of posting behind it. One algorithm at a time.
+tier_3:
+  - name: Creator D
+    vertical: your-second-vertical
+    verified: false
